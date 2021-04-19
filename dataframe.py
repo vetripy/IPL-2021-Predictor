@@ -20,3 +20,5 @@ for i in new['player_dismissed']:
                 second_innings_wickets+=1
 
 print(first_innings_wickets,second_innings_wickets)
+run['wickets']=new.groupby(['innings'])[['player_dismissed']].count()
+print(run)
