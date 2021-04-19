@@ -3,6 +3,7 @@ import os
 
 
 
+
 df = pd.read_csv(r'{0}/all_matches.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
 
 
@@ -32,6 +33,9 @@ def function(matchid,innings):
         
         run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
         
+        
+                
+        
 
         return(run[['innings','totalscore','wickets']].loc[run['innings']==innings])
 
@@ -44,7 +48,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids:
+for i in ids[:5]:
 
     first = function(i,1)
     second = function(i,2)
@@ -56,5 +60,6 @@ for i in ids:
         second_innings['target_score']=first_innings['totalscore'].values
 
         
-#print(first_innings)
-second_innings.to_csv('second_innings.csv')
+print(first_innings)
+print(second_innings)
+#second_innings.to_csv('second_innings.csv')
