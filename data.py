@@ -30,12 +30,17 @@ def function(matchid,innings):
         
 
         count_balls = balls['counts']
-        
+        #DOT-BALL COUNT
         if innings==1:
             run['dot_balls'] = [i for i in balls['counts']][0]
         elif innings==2:
             run['dot_balls'] = [i for i in balls['counts']][1]
-
+        #BOUNDARY COUNT
+        boundary=balls[(balls.runs_off_bat>=4)]
+        boundary=boundary.groupby(['innings']).sum()
+        run.index=boundary.index
+        run['boundary']=boundary['counts'].values
+        #------------------------------------------
         try:
             run['innings'] = [1,2]
         except Exception:
@@ -47,7 +52,7 @@ def function(matchid,innings):
                 
         
 
-        return(run[['innings','totalscore','wickets','dot_balls']].loc[run['innings']==innings])
+        return(run[['innings','totalscore','wickets','dot_balls','boundary']].loc[run['innings']==innings])
 
 
 ids = [i for i in df['match_id'].unique()]
@@ -58,13 +63,8 @@ second_innings=pd.DataFrame()
 
 
 
-<<<<<<< HEAD
-for i in ids[:5]:
-
-=======
-for i in ids[:1]:
+for i in ids[:10]:
     
->>>>>>> 03e8fb997248494c0e9d010f164a0a2c33f1b2ac
     first = function(i,1)
     second = function(i,2)
     if first.empty != True and second.empty != True:
