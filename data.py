@@ -31,4 +31,4 @@ beta = pd.DataFrame()
 for i in ids:
     beta = beta.append(function(i,1))
 
-print(beta.describe())
+beta.to_csv("First_Innings.csv")
