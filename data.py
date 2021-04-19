@@ -33,7 +33,7 @@ second_innings=pd.DataFrame()
 for i in ids:
     first_innings = first_innings.append(function(i,1))
     second_innings=second_innings.append(function(i,2))
-    second_innings['target_score']=first_innings['totalscore'].values
+    #second_innings['target_score']=first_innings['totalscore'].values
 
 #first_innings.to_csv("First_Innings.csv")
 print(second_innings)
