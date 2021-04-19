@@ -19,7 +19,7 @@ def function(matchid,innings):
         run['innings'] = [1]
     
     run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
-
+    
 
     return(run[['innings','totalscore','wickets']].loc[run['innings']==innings])
 
@@ -27,8 +27,13 @@ def function(matchid,innings):
 ids = [i for i in df['match_id'].unique()]
 
 
-beta = pd.DataFrame()
-for i in ids:
-    beta = beta.append(function(i,1))
+first_innings = pd.DataFrame()
+second_innings=pd.DataFrame()
 
-beta.to_csv("First_Innings.csv")
+for i in ids:
+    first_innings = first_innings.append(function(i,1))
+    second_innings=second_innings.append(function(i,2))
+    second_innings['target_score']=first_innings['totalscore'].values
+
+#first_innings.to_csv("First_Innings.csv")
+print(second_innings)
