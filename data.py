@@ -62,7 +62,9 @@ for i in ids[:1]:
         first_innings = first_innings.append(function(i,1))
         
         second_innings = second_innings.append(function(i,2))
+        second_innings.index=first_innings.index
+        second_innings['target_score']=first_innings['totalscore'].values
 
         
-print(first_innings)
-print(second_innings)
+#print(first_innings)
+second_innings.to_csv('second_innings.csv')
