@@ -11,6 +11,7 @@ run=new.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','
 
 run['totalscore']=run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
 
+
 run['innings']=[1,2]
 
 run['wickets']=new.groupby(['innings'])[['player_dismissed']].count()
