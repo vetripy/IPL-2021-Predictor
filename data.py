@@ -24,7 +24,17 @@ def function(matchid,innings):
         run = new.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','legbyes']].sum()
 
         run['totalscore'] = run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
+
+        balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
         
+
+        count_balls = balls['counts']
+        
+        if innings==1:
+            run['dot_balls'] = [i for i in balls['counts']][0]
+        elif innings==2:
+            run['dot_balls'] = [i for i in balls['counts']][1]
+
         try:
             run['innings'] = [1,2]
         except Exception:
@@ -33,7 +43,7 @@ def function(matchid,innings):
         run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
         
 
-        return(run[['innings','totalscore','wickets']].loc[run['innings']==innings])
+        return(run[['innings','totalscore','wickets','dot_balls']].loc[run['innings']==innings])
 
 
 ids = [i for i in df['match_id'].unique()]
@@ -44,8 +54,8 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids:
-
+for i in ids[:1]:
+    
     first = function(i,1)
     second = function(i,2)
     if first.empty != True and second.empty != True:
