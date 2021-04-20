@@ -3,6 +3,7 @@ import os
 
 
 
+
 df = pd.read_csv(r'{0}/all_matches.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
 
 
@@ -28,13 +29,21 @@ def function(matchid,innings):
         balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
         
 
-        count_balls = balls['counts']
         
+        #DOT-BALL COUNT
         if innings==1:
             run['dot_balls'] = [i for i in balls['counts']][0]
         elif innings==2:
             run['dot_balls'] = [i for i in balls['counts']][1]
-
+        #BOUNDARY COUNT
+        boundary=balls[(balls.runs_off_bat>=4)]
+        boundary=boundary.groupby(['innings']).sum()
+        #run.index=boundary.index
+        try:
+            run['boundary']=boundary['counts'].values
+        except Exception:
+            run['boundary']=[0,0]
+        #------------------------------------------
         try:
             run['innings'] = [1,2]
         except Exception:
@@ -42,8 +51,11 @@ def function(matchid,innings):
         
         run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
         
+        
+                
+        
 
-        return(run[['innings','totalscore','wickets','dot_balls']].loc[run['innings']==innings])
+        return(run[['innings','totalscore','wickets','dot_balls','boundary']].loc[run['innings']==innings])
 
 
 ids = [i for i in df['match_id'].unique()]
@@ -54,7 +66,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids[:1]:
+for i in ids:
     
     first = function(i,1)
     second = function(i,2)
@@ -65,6 +77,9 @@ for i in ids[:1]:
         second_innings.index=first_innings.index
         second_innings['target_score']=first_innings['totalscore'].values
 
-        
+
+ 
 #print(first_innings)
-second_innings.to_csv('second_innings.csv')
+#print(second_innings)
+#first_innings.to_csv('first_innings.csv')
+#second_innings.to_csv('second_innings.csv')
