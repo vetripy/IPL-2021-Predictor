@@ -31,7 +31,7 @@ def function(matchid,innings):
 
         run['target_score'] = total_run['runs_off_bat']+total_run['wides']+total_run['noballs']+total_run['byes']+total_run['legbyes']
         
-        run['totalscore'] = run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
+        run['score'] = run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
 
         balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
 
@@ -52,7 +52,7 @@ def function(matchid,innings):
         boundary=boundary.groupby(['innings']).sum()
 
 
-        #run.index=boundary.index
+        
         try:
             run['boundary']=boundary['counts'].values
         except Exception:
@@ -69,10 +69,12 @@ def function(matchid,innings):
         #------------------------------------------
         
         run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
+        run['overs']=6
+
+        return(run[['match_id','innings','target_score','overs','score','wickets','dot_balls','boundary']].loc[run['innings']==innings])
         
-        
-        return(run[['match_id','innings','totalscore','target_score','wickets','dot_balls','boundary']].loc[run['innings']==innings])
-        
+
+
 ids = [i for i in df['match_id'].unique()]
 
 
@@ -81,7 +83,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids[:3]:
+for i in ids:
     
     first = function(i,1)
     second = function(i,2)
@@ -89,16 +91,19 @@ for i in ids[:3]:
     if first.empty != True and second.empty != True:
 
         first_innings = first_innings.append(function(i,1))
+        
         second_innings = second_innings.append(function(i,2))
-        
-        
-        
-        
-        
 
 
-# first_innings = first_innings.reset_index(drop=True)
-# second_innings = second_innings.reset_index(drop=True)
+first_innings.index = second_innings.index
+second_innings['target'] = first_innings['target_score']
+second_innings = second_innings.drop(columns='target_score')
+first_innings = first_innings.drop(columns='target_score')
+ 
 
-# first_innings.to_csv('csv/first_innings.csv')
-# second_innings.to_csv('csv/second_innings.csv')
+first_innings = first_innings.reset_index(drop=True)
+second_innings = second_innings.reset_index(drop=True)
+#print(first_innings)
+#print(second_innings)
+#first_innings.to_csv('csv/first_innings.csv')
+#second_innings.to_csv('csv/second_innings.csv')
