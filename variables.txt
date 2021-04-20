@@ -5,6 +5,7 @@
 3.Number of mathces played until then in particular season //  6 4 4 segregation
 4.dot balls , till 6th over
 5.boundaries, till 6th over 
+
 6.Venue as flag
 7.Opponent as flag
 8.Team name as flag
