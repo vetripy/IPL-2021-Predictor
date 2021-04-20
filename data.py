@@ -38,8 +38,11 @@ def function(matchid,innings):
         #BOUNDARY COUNT
         boundary=balls[(balls.runs_off_bat>=4)]
         boundary=boundary.groupby(['innings']).sum()
-        run.index=boundary.index
-        run['boundary']=boundary['counts'].values
+        #run.index=boundary.index
+        try:
+            run['boundary']=boundary['counts'].values
+        except Exception:
+            run['boundary']=[0,0]
         #------------------------------------------
         try:
             run['innings'] = [1,2]
@@ -63,7 +66,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids[:10]:
+for i in ids:
     
     first = function(i,1)
     second = function(i,2)
@@ -74,7 +77,9 @@ for i in ids[:10]:
         second_innings.index=first_innings.index
         second_innings['target_score']=first_innings['totalscore'].values
 
-        
-print(first_innings)
-print(second_innings)
+
+ 
+#print(first_innings)
+#print(second_innings)
+#first_innings.to_csv('first_innings.csv')
 #second_innings.to_csv('second_innings.csv')
