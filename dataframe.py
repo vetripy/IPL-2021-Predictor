@@ -10,10 +10,9 @@ df = pd.read_csv(r'{0}/csv/all_matches.csv'.format(os.path.dirname(os.path.abspa
 def function(matchid,innings):
 
     new = df.loc[df['match_id']==i]
-
-    total_run = pd.DataFrame()
-    total_run = total_run.append(new)
-
+    total_run=pd.DataFrame()
+    total_run=total_run.append(new)
+    
     new = new.loc[new['ball']<=5.6]
 
     new.drop(new[new['innings']>2].index,inplace=True)
@@ -27,17 +26,18 @@ def function(matchid,innings):
     else:
 
         run = new.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','legbyes']].sum()
+        
         total_run = total_run.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','legbyes']].sum()
 
-        total_run = total_run['runs_off_bat']+total_run['wides']+total_run['noballs']+total_run['byes']+total_run['legbyes']
-
+        run['target_score'] = total_run['runs_off_bat']+total_run['wides']+total_run['noballs']+total_run['byes']+total_run['legbyes']
+        
         run['score'] = run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
 
         balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
 
         run['match_id'] = matchid
         
-        run['target_score'] = total_run
+        
         
         #DOT-BALL COUNT
         if innings==1:
@@ -52,7 +52,7 @@ def function(matchid,innings):
         boundary=boundary.groupby(['innings']).sum()
 
 
-        #run.index=boundary.index
+        
         try:
             run['boundary']=boundary['counts'].values
         except Exception:
@@ -69,9 +69,9 @@ def function(matchid,innings):
         #------------------------------------------
         
         run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
-        
+        run['overs']=6
 
-        return(run[['match_id','innings','target_score','score','wickets','dot_balls','boundary']].loc[run['innings']==innings])
+        return(run[['match_id','innings','target_score','overs','score','wickets','dot_balls','boundary']].loc[run['innings']==innings])
         
 
 
@@ -80,6 +80,7 @@ ids = [i for i in df['match_id'].unique()]
 
 first_innings = pd.DataFrame()
 second_innings=pd.DataFrame()
+
 
 
 for i in ids:
@@ -102,6 +103,7 @@ first_innings = first_innings.drop(columns='target_score')
 
 first_innings = first_innings.reset_index(drop=True)
 second_innings = second_innings.reset_index(drop=True)
-
-first_innings.to_csv('csv/first_innings.csv')
-second_innings.to_csv('csv/second_innings.csv')
+#print(first_innings)
+#print(second_innings)
+#first_innings.to_csv('csv/first_innings.csv')
+#second_innings.to_csv('csv/second_innings.csv')
