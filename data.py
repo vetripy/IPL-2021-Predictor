@@ -29,7 +29,7 @@ def function(matchid,innings):
         balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
         
 
-        count_balls = balls['counts']
+        
         #DOT-BALL COUNT
         if innings==1:
             run['dot_balls'] = [i for i in balls['counts']][0]
