@@ -7,16 +7,11 @@ df = pd.read_csv(r'{0}/csv/second_innings.csv'.format(os.path.dirname(os.path.ab
 
 df = df.sort_values(by=['target'])
 
-plt.scatter(df['target'],df['srcoe'])
-
-plt.xlabel('Traget in asc order')
-plt.ylabel('score in 6 overs')
-
-a = [60 for i in range(817)]
-b = pd.DataFrame({
-    'col1' : a
-})
+a = df.groupby(['dot_balls'])['srcoe'].mean()
 
 
-plt.plot(df['target'],b['col1'])
+
+plt.scatter(a.index,a)
+
+
 plt.show()
