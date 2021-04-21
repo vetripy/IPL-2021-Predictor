@@ -83,7 +83,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids:
+for i in ids[-2:]:
     
     first = function(i,1)
     second = function(i,2)
