@@ -4,110 +4,102 @@ import os
 
 
 
-df = pd.read_csv(r'{0}/csv/testinput.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
+def score(matchid):
+
+    #--------Opening the input dataframe and store it as df-------------------
+    df = pd.read_csv(r'{0}/csv/testInput.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
 
 
-def function(matchid,innings):
+    #--------Cleaning the data with respect to the matchid and till 6th over---
+    score = df.loc[df['match_id']==matchid]
+    score = score.loc[score['ball']<=5.6]
 
-    new = df.loc[df['match_id']==i]
-    total_run=pd.DataFrame()
-    total_run=total_run.append(new)
-    
-    new = new.loc[new['ball']<=5.6]
 
-    new.drop(new[new['innings']>2].index,inplace=True)
+    #--------Removing the superover innings------------------------------------
+    score.drop(score[score['innings']>2].index,inplace=True)
 
-    cond = [i for i in new['innings'].unique()]
-
+    #--------Returning empty dataframe if a mathch as only 1 innings-----------
+    cond = [i for i in score['innings'].unique()]
     if cond!=[1,2]:
-        
+       
         return(pd.DataFrame())
     
     else:
-
-        run = new.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','legbyes']].sum()
-        
-        total_run = total_run.groupby(['innings'])[['runs_off_bat','extras','wides','noballs','byes','legbyes']].sum()
-
-        run['target_score'] = total_run['runs_off_bat']+total_run['wides']+total_run['noballs']+total_run['byes']+total_run['legbyes']
-        
-        run['score'] = run['runs_off_bat']+run['wides']+run['noballs']+run['byes']+run['legbyes']
-
-        balls = new.groupby(['runs_off_bat','innings']).size().reset_index(name='counts')
-
-        run['match_id'] = matchid
-        
-        
-        
-        #DOT-BALL COUNT
-        if innings==1:
-            run['dot_balls'] = [i for i in balls['counts']][0]
-        elif innings==2:
-            run['dot_balls'] = [i for i in balls['counts']][1]
-            
-
-
-        #BOUNDARY COUNT
-        boundary=balls[(balls.runs_off_bat>=4)]
-        boundary=boundary.groupby(['innings']).sum()
-
-
-        
-        try:
-            run['boundary']=boundary['counts'].values
-        except Exception:
-            run['boundary']=[0,0]
-
-
-        #------------------------------------------
-
-        try:
-            run['innings'] = [1,2]
-        except Exception:
-            run['innings'] = [1]
-
-        #------------------------------------------
-        
-        run['wickets'] = new.groupby(['innings'])[['player_dismissed']].count()
-        run['overs']=6
-
-        return(run[['match_id','innings','target_score','overs','score','wickets','dot_balls','boundary']].loc[run['innings']==innings])
-        
-
-
-ids = [i for i in df['match_id'].unique()]
-
-
-first_innings = pd.DataFrame()
-second_innings=pd.DataFrame()
-
-
-
-<<<<<<< HEAD:preprocess.py
-for i in ids[-2:]:
-=======
-for i in ids[:5]:
->>>>>>> 1fd4e69ec6a9cdd39d11d0e10205a3570db552fe:preprcoess.py
     
-    first = function(i,1)
-    second = function(i,2)
-    
-    if first.empty != True and second.empty != True:
+        #------Grouping the data with reasaonable coolumns to get the score of each innings-------------
+        score = score.groupby(['venue', 'innings', 'batting_team', 'bowling_team','striker'])[['runs_off_bat','extras']].sum()
+        score['score'] = score['runs_off_bat'] + score['extras']
+        score = score.drop(columns = ['runs_off_bat','extras'])
 
-        first_innings = first_innings.append(function(i,1))
+        #------Grouping the data with reasaonable coolumns to get the dotballs of each innings-------------
+        balls = score.groupby(['runs_off_bat','innings','bowler']).size().reset_index()
+        balls=balls[(balls.runs_off_bat==0)]
+        dot_balls = score.groupby(['venue', 'innings', 'batting_team','bowler'])[['player_dismissed','wides','noballs']].count()
+        dot_balls['dot_balls'] = balls['index'].values
+        dot_balls['extra']=dot_balls['wides']+dot_balls['noballs']
+        dot_balls = dot_balls.drop(columns=['wides','noballs'])
         
-        second_innings = second_innings.append(function(i,2))
+        return(score,dot_balls)
 
 
-first_innings.index = second_innings.index
-second_innings['target'] = first_innings['target_score']
-second_innings = second_innings.drop(columns='target_score')
-first_innings = first_innings.drop(columns='target_score')
- 
 
-first_innings = first_innings.reset_index(drop=True)
-second_innings = second_innings.reset_index(drop=True)
-print(first_innings)
-print(second_innings)
-#first_innings.to_csv('csv/first_innings.csv')
-#second_innings.to_csv('csv/second_innings.csv')
+def strike_rate():
+
+    #--------Opening the input dataframe and store it as df-----------------
+    df = pd.read_csv(r'{0}/csv/testInput.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
+
+
+    #--------Changing the all the balls to 1 to count it easier--------------  
+    one = [1 for i in range(len(df))]
+    df['ball'] = one
+
+    #--------Grouping the batsmen with their strike rate all the bowlers-----
+    strike = df.groupby(['match_id','venue','striker','bowler'],as_index=False)[['runs_off_bat','ball']].sum()
+
+    #--------Calculating the strike rate and adding them to the dataframe----
+    strike['strike_rate'] = strike['runs_off_bat']/strike['ball']
+    strike['strike_rate'] = strike['strike_rate']*100
+    strike['strike_rate'] = strike['strike_rate'].round(decimals=2)
+
+    
+    return(strike)
+
+
+def bowling_stats():
+
+    #--------Opening the input dataframe and store it as df-----------------
+    df = pd.read_csv(r'{0}/csv/testInput.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
+
+    bowler_stats=pd.DataFrame()
+    bowler_stats = bowler_stats.append(df)
+
+    #-----------Wicket Stats--------------------------------------------------
+    bowler_stats=bowler_stats.groupby(['match_id','bowler','batting_team'],as_index=False)[['player_dismissed']].count()
+    bowler_stats=bowler_stats.groupby(['bowler','batting_team'],as_index=False)[['player_dismissed']].mean()
+    bowler_stats['player_dismissed']=bowler_stats['player_dismissed'].astype(int)
+
+
+    #-----------No of overs----------------------------------------------------
+    over=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['ball']].size().reset_index()
+    over=over.groupby(['bowler','batting_team'],as_index=False)[['index']].sum()
+    over['overs']=over['index'].div(6)
+    over=over.drop(columns=['index'])
+
+    #-----------Economy Stats---------------------------------------------------
+    economy=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['runs_off_bat','extras']].sum()
+    economy['economy']=economy['runs_off_bat']+economy['extras']
+    economy = economy.drop(columns=['runs_off_bat','extras'])
+    economy=economy.groupby(['bowler','batting_team'],as_index=False)[['economy']].sum()
+    economy['economy']=economy['economy'].div(over['overs'].values)
+    bowler_stats['avg_wkts']=bowler_stats['player_dismissed'].values
+    bowler_stats=bowler_stats.drop(columns=['player_dismissed'])
+    bowler_stats['economy']=economy['economy'].values
+    bowler_stats['overs']=over['overs'].values
+    bowler_stats['economy']=bowler_stats['economy'].round(decimals=2)
+    bowler_stats['overs']=bowler_stats['overs'].round(decimals=2)
+    
+
+    
+    return (bowler_stats)
+
+print(bowling_stats())
