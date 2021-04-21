@@ -89,22 +89,18 @@ def bowling_stats():
 
 
 
-<<<<<<< HEAD
 
 # match_data = pd.DataFrame()
 
-=======
 bowler_stats=pd.DataFrame()
 bat_data = pd.DataFrame()
 ball_data = pd.DataFrame()
 bowler_stats=bowling_stats()
->>>>>>> 1fd4e69ec6a9cdd39d11d0e10205a3570db552fe
 
 
 
 # for i in ids[:5]:
     
-<<<<<<< HEAD
 #     data = function(i)
 
     
@@ -114,15 +110,13 @@ bowler_stats=bowling_stats()
         
         
 
-=======
-    databat,databall = function(i)
+    #atabat,databall = function(i)
     
     
     #if databat.empty != True and databall != True:
 
-    bat_data = bat_data.append(databat)
-    ball_data = ball_data.append(databall)
+    #bat_data = bat_data.append(databat)
+    #ball_data = ball_data.append(databall)
         
 
 print(bowler_stats)
->>>>>>> 1fd4e69ec6a9cdd39d11d0e10205a3570db552fe
