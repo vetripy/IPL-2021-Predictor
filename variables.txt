@@ -6,6 +6,8 @@
 4.dot balls , till 6th over
 5.boundaries, till 6th over 
 
+------Not required---------
+
 6.Venue as flag
 7.Opponent as flag
 8.Team name as flag
