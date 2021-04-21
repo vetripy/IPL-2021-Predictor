@@ -4,7 +4,7 @@ import os
 
 
 
-df = pd.read_csv(r'{0}/csv/all_matches.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
+df = pd.read_csv(r'{0}/csv/testinput.csv'.format(os.path.dirname(os.path.abspath(__file__))),low_memory=False)
 
 
 def function(matchid,innings):
@@ -83,7 +83,7 @@ second_innings=pd.DataFrame()
 
 
 
-for i in ids:
+for i in ids[:5]:
     
     first = function(i,1)
     second = function(i,2)
@@ -103,7 +103,7 @@ first_innings = first_innings.drop(columns='target_score')
 
 first_innings = first_innings.reset_index(drop=True)
 second_innings = second_innings.reset_index(drop=True)
-#print(first_innings)
-#print(second_innings)
+print(first_innings)
+print(second_innings)
 #first_innings.to_csv('csv/first_innings.csv')
 #second_innings.to_csv('csv/second_innings.csv')

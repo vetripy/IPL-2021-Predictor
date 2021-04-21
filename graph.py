@@ -7,9 +7,11 @@ df = pd.read_csv(r'{0}/csv/second_innings.csv'.format(os.path.dirname(os.path.ab
 
 df = df.groupby(['dot_balls'])[['dot_balls','srcoe']].mean()
 
-plt.scatter(df['dot_balls'],df['srcoe'])
+a = df.groupby(['dot_balls'])['srcoe'].mean()
 
-plt.xlabel('dot_balls')
-plt.ylabel('score in 6 overs')
+
+
+plt.scatter(a.index,a)
+
 
 plt.show()
