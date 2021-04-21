@@ -41,15 +41,33 @@ def function(matchid):
 def bowling_stats():
     bowler_stats=pd.DataFrame()
     bowler_stats = bowler_stats.append(df)
-   
+    #-----------------------------------------------------------------------------------
+    #WICKET STATS
     bowler_stats=bowler_stats.groupby(['match_id','bowler','batting_team'],as_index=False)[['player_dismissed']].count()
     bowler_stats=bowler_stats.groupby(['bowler','batting_team'],as_index=False)[['player_dismissed']].mean()
-    economy=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['runs_off_bat','extras']].sum()
-    economy['economy']=(economy['runs_off_bat']+economy['extras']).div(4)
-    economy = economy.drop(columns=['runs_off_bat','extras'])
-    economy=economy.groupby(['bowler','batting_team'],as_index=False)[['economy']].mean()
-    bowler_stats['economy']=economy['economy'].values
     bowler_stats['player_dismissed']=bowler_stats['player_dismissed'].astype(int)
+    #-----------------------------------------------------------------------------------
+    #NO. OF OVERS
+    over=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['ball']].size().reset_index(name='ball_count')
+    over=over.groupby(['bowler','batting_team'],as_index=False)[['ball_count']].sum()
+    over['overs']=over['ball_count'].div(6)
+    over=over.drop(columns=['ball_count'])
+    #------------------------------------------------------------------------------------------
+    #ECONOMY STATS
+    economy=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['runs_off_bat','extras']].sum()
+    economy['economy']=economy['runs_off_bat']+economy['extras']
+    economy = economy.drop(columns=['runs_off_bat','extras'])
+    economy=economy.groupby(['bowler','batting_team'],as_index=False)[['economy']].sum()
+    economy['economy']=economy['economy'].div(over['overs'].values)
+    bowler_stats['avg_wkts']=bowler_stats['player_dismissed'].values
+    bowler_stats=bowler_stats.drop(columns=['player_dismissed'])
+    bowler_stats['economy']=economy['economy'].values
+    bowler_stats['overs']=over['overs'].values
+    bowler_stats['economy']=bowler_stats['economy'].round(decimals=2)
+    bowler_stats['overs']=bowler_stats['overs'].round(decimals=2)
+    
+    #----------------------------------------------------------------------------------------
+    
     return bowler_stats
 
 
