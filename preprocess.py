@@ -50,23 +50,12 @@ def strike_rate():
     #--------Opening the input dataframe and store it as df-----------------
     df = pd.read_csv(r'{0}/testInput.csv'.format(sys.path[0]),low_memory=False)
 
-    #--------Changing the all the balls to 1 to count it easier--------------  
-
-    #strike = df.loc[df['innings']<=2]
-    a = df.copy()
-    a = a.loc[a['ball']<=5.6]
-    a = a.loc[a['innings']<=2]
-    a = a.groupby(['match_id','venue','bowling_team'],as_index=False)[['runs_off_bat','extras']].sum()
-    a['totalscore'] = a['runs_off_bat']+a['extras']
-    a = a.drop(columns=['runs_off_bat','extras'])
-    
- 
+    #--------Changing the all the balls to 1 to count it easier--------------   
     one = [1 for i in range(len(df))]
     df['ball'] = one
 
     #--------Grouping the batsmen with their strike rate all the bowlers-----
     strike = df.groupby(['match_id','striker','venue','bowling_team'],as_index=False)[['runs_off_bat','ball']].sum()
-    
     
 
     #--------Calculating the strike rate and adding them to the dataframe----
@@ -78,11 +67,9 @@ def strike_rate():
     strike = strike.drop(columns=['ball'])
     
     #--------Average strike rate of batsmen-----------------------------------
-    strike = strike.groupby(['match_id','venue','striker','runs_off_bat'],as_index=False)[['strike_rate']].mean().round(decimals=2)
-    strike['score'] = a['totalscore']
-    del a
-    strike.to_csv('test.csv')
-    #return(strike.loc[strike['striker']==batsman_name].values[0][1])
+    strike = strike.groupby(['striker','venue'],as_index=False)[['strike_rate']].mean().round(decimals=2)
+    
+    
     return(strike)
 
 
@@ -116,11 +103,11 @@ def bowling_stats():
     bowler_stats=bowler_stats.drop(columns=['player_dismissed'])
     bowler_stats['economy']=economy['economy'].values
     bowler_stats['overs']=over['overs'].values
+
     bowler_stats['economy']=bowler_stats['economy'].round(decimals=2)
     bowler_stats['overs']=bowler_stats['overs'].round(decimals=2)
+    bowler_stats = bowler_stats.drop(colums=['avg_wickets','overs'])
     
-    
-    
-    print(bowler_stats)
-#strike_rate()
-bowling_stats()
+    return(bowler_stats)
+
+
