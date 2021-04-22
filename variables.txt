@@ -12,3 +12,10 @@
 7.Opponent as flag
 8.Team name as flag
 
+Venue 
+            Temas
+Wickets
+no of bowlers
+
+
+
