@@ -1,17 +1,9 @@
 import matplotlib.pyplot as plt 
-import pandas as pd
-import os
+from preprocess import data
 
+a = data()
+a = a.sort_values(by=['wickets'])
+a = a.groupby(['wickets'],as_index=False)[['total_runs']].mean()
 
-df = pd.read_csv(r'{0}/csv/second_innings.csv'.format(os.path.dirname(os.path.abspath(__file__))))
-
-df = df.groupby(['dot_balls'])[['dot_balls','srcoe']].mean()
-
-a = df.groupby(['dot_balls'])['srcoe'].mean()
-
-
-
-plt.scatter(a.index,a)
-
-
+plt.scatter(a['wickets'],a['total_runs'])
 plt.show()

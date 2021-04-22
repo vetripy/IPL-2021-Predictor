@@ -41,7 +41,7 @@ def data():
     data_file['no of bowlers'] = data_file_copy['bowler']
     del data_file_copy
 
-    data_file.to_csv('test.csv')
+    
     return(data_file)
 
 
