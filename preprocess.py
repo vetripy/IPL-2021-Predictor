@@ -84,22 +84,22 @@ def bowling_stats():
     bowler_stats = bowler_stats.append(df)
 
     #-----------Wicket Stats--------------------------------------------------
-    bowler_stats=bowler_stats.groupby(['match_id','bowler','batting_team'],as_index=False)[['player_dismissed']].count()
-    bowler_stats=bowler_stats.groupby(['bowler','batting_team'],as_index=False)[['player_dismissed']].mean()
+    bowler_stats=bowler_stats.groupby(['match_id','bowler','venue'],as_index=False)[['player_dismissed']].count()
+    bowler_stats=bowler_stats.groupby(['bowler','venue'],as_index=False)[['player_dismissed']].mean()
     bowler_stats['player_dismissed']=bowler_stats['player_dismissed'].astype(int)
 
 
     #-----------No of overs----------------------------------------------------
-    over=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['ball']].size().reset_index(name='index')
-    over=over.groupby(['bowler','batting_team'],as_index=False)[['index']].sum()
+    over=df.groupby(['match_id','bowler','venue'],as_index=False)[['ball']].size().reset_index(name='index')
+    over=over.groupby(['bowler','venue'],as_index=False)[['index']].sum()
     over['overs']=over['index'].div(6)
     over=over.drop(columns=['index'])
 
     #-----------Economy Stats---------------------------------------------------
-    economy=df.groupby(['match_id','bowler','batting_team'],as_index=False)[['runs_off_bat','extras']].sum()
+    economy=df.groupby(['match_id','bowler','venue'],as_index=False)[['runs_off_bat','extras']].sum()
     economy['economy']=economy['runs_off_bat']+economy['extras']
     economy = economy.drop(columns=['runs_off_bat','extras'])
-    economy=economy.groupby(['bowler','batting_team'],as_index=False)[['economy']].sum()
+    economy=economy.groupby(['bowler','venue'],as_index=False)[['economy']].sum()
     economy['economy']=economy['economy'].div(over['overs'].values)
     bowler_stats['avg_wkts']=bowler_stats['player_dismissed'].values
     bowler_stats=bowler_stats.drop(columns=['player_dismissed'])
@@ -109,7 +109,8 @@ def bowling_stats():
     bowler_stats['economy']=bowler_stats['economy'].round(decimals=2)
     bowler_stats['overs']=bowler_stats['overs'].round(decimals=2)
     
-    bowler_stats = bowler_stats.groupby(['bowler'],as_index=False)[['economy']].mean().round(decimals=2)
     
-    return (bowler_stats)
-strike_rate()
+    
+    print(bowler_stats)
+#strike_rate()
+bowling_stats()
