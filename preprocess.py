@@ -70,8 +70,6 @@ def strike_rate():
     strike = strike.groupby(['striker','venue'],as_index=False)[['strike_rate']].mean().round(decimals=2)
     
     
-    strike.to_csv('test.csv')
-    #return(strike.loc[strike['striker']==batsman_name].values[0][1])
     return(strike)
 
 
@@ -108,9 +106,8 @@ def bowling_stats():
 
     bowler_stats['economy']=bowler_stats['economy'].round(decimals=2)
     bowler_stats['overs']=bowler_stats['overs'].round(decimals=2)
+    bowler_stats = bowler_stats.drop(colums=['avg_wickets','overs'])
     
-    
-    
-    print(bowler_stats)
-#strike_rate()
-bowling_stats()
+    return(bowler_stats)
+
+
