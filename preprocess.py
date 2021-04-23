@@ -67,7 +67,7 @@ def strike_rate():
     strike = strike.drop(columns=['ball'])
     
     #--------Average strike rate of batsmen-----------------------------------
-    strike = strike.groupby(['striker','venue'],as_index=False)[['strike_rate']].mean().round(decimals=2)
+    strike = strike.groupby(['striker','bowling_team'],as_index=False)[['strike_rate']].mean().round(decimals=2)
     
     
     return(strike)

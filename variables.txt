@@ -18,4 +18,15 @@ Wickets
 no of bowlers
 
 
+Input format
+Team mate 
+upload 
+
+---------------------
+
+Models 
+Strike rate
+economy
+googling
+
 
