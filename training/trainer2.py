@@ -14,7 +14,7 @@ df = bowling_stats()
 df = df.fillna(method='ffill')
 
 df.to_csv('bowlingdata.csv')
-test_case=pd.read_csv('D:\PSR FOLDER\python\IPL-2021-Predictor\input_test_data.csv')
+test_case=pd.read_csv('D:\PSR FOLDER\python\IPL-2021-Predictor\input_test_data.csv')#to the predictor
 temp=pd.DataFrame()
 temp['bowler'] = df['bowler'].values
 temp['batting_team'] = df['batting_team'].values
@@ -33,10 +33,10 @@ x_train,x_test,y_train,y_test=train_test_split(X,y,random_state=1)
 y_pred=0
 linreg=LinearRegression()
 linreg.fit(x_train,y_train)
-n=len(test_case['bowlers'].values[0].split(','))
-overs=6/n
+n=len(test_case['bowlers'].values[0].split(','))#to the predictor
+overs=6/n#to the predictor
 
-for i in test_case['bowlers'].values[0].split(','):
+for i in test_case['bowlers'].values[0].split(','):#full loop to the predictor
     data=[[bowler_dict[i],batting_team_dict[test_case['batting_team'].values[0]],test_case['innings'].values[0]]]
     y_pred+=(int(linreg.predict(data))*overs)
 
