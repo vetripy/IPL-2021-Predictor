@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt 
-from preprocess import data
+from preprocess import strike_rate
 
-a = data()
-a = a.sort_values(by=['wickets'])
-a = a.groupby(['wickets'],as_index=False)[['total_runs']].mean()
+a = strike_rate()
+a = a.sort_values(by=['strike_rate'])
+a = a.groupby(['striker'],as_index=False)[['strike_rate','runs_off_bat']].mean()
 
-plt.scatter(a['wickets'],a['total_runs'])
-plt.show()
+#plt.plot(a['strike_rate'],a['runs_off_bat'])
+#plt.show()
+print(a)

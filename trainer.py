@@ -4,41 +4,46 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import LabelEncoder
-from preprocess import data
+from preprocess import data,strike_rate
 import joblib
 
 team_encoder = LabelEncoder()
+venue_encoder = LabelEncoder()
+name_encoder = LabelEncoder()
 
 df = data()
-df.to_csv('testdata.csv')
-temp=pd.DataFrame()
-temp['batting_team'] = df['batting_team'].values
-temp['bowling_team'] = df['bowling_team'].values
+df2 = strike_rate()
 
-#df['venue'] = le.fit_transform(df.venue.values)
+
 df['batting_team'] = team_encoder.fit_transform(df.batting_team.values)
 df['bowling_team'] = team_encoder.fit_transform(df.bowling_team.values)
 
+df2['venue'] = venue_encoder.fit_transform(df2.venue.values)
+df2['striker'] = name_encoder.fit_transform(df2.striker.values)
+df2['bowling_team'] = team_encoder.fit_transform(df2.bowling_team.values)
 
-#venue_dict = dict(zip(temp.venue, df.venue))
-bowling_team_dict= dict(zip(temp.bowling_team,df.bowling_team))
-batting_team_dict = dict(zip(temp.batting_team,df.batting_team))
 
-X=df[['batting_team','bowling_team','wickets']]
+x=df[['batting_team','bowling_team','wickets']]
 y=df['total_runs']
 
-x_train,x_test,y_train,y_test=train_test_split(X,y,random_state=1)
 
-# linreg=LinearRegression()
-# linreg.fit(x_train,y_train)
-
-data=[[batting_team_dict["Kolkata Knight Riders"],bowling_team_dict["Chennai Super Kings"],5]]
-dtree=DecisionTreeRegressor()
-dtree.fit(x_train,y_train)
-y_pred = dtree.predict(data)
-print(y_pred)
-
-# joblib.dump(linreg,r'{0}/regeression_model.joblib'.format(sys.path[0]))
-# joblib.dump(team_encoder,r'{0}/team_encoder.joblib'.format(sys.path[0]))
+X=df2[['venue','striker','bowling_team']]
+Y=df2['strike_rate']
 
 
+x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=1)
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,random_state=1)
+
+
+linreg = LinearRegression()
+linreg.fit(x_train,y_train)
+
+linreg_2 = LinearRegression()
+linreg_2.fit(X_train,Y_train)
+
+
+joblib.dump(linreg,r'{0}/regeression_model.joblib'.format(sys.path[0]))
+joblib.dump(linreg_2,r'{0}/new_regeression_model.joblib'.format(sys.path[0]))
+joblib.dump(team_encoder,r'{0}/team_encoder.joblib'.format(sys.path[0]))
+joblib.dump(venue_encoder,r'{0}/venue_encoder.joblib'.format(sys.path[0]))
+joblib.dump(name_encoder,r'{0}/name_encoder.joblib'.format(sys.path[0]))

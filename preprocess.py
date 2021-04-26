@@ -55,7 +55,7 @@ def strike_rate():
     df['ball'] = one
 
     #--------Grouping the batsmen with their strike rate all the bowlers-----
-    strike = df.groupby(['match_id','striker','venue','bowling_team'],as_index=False)[['runs_off_bat','ball']].sum()
+    strike = df.groupby(['venue','striker','bowling_team'],as_index=False)[['runs_off_bat','ball']].sum()
     
 
     #--------Calculating the strike rate and adding them to the dataframe----
@@ -64,11 +64,11 @@ def strike_rate():
     strike['strike_rate'] = strike['strike_rate'].round(decimals=2)
 
     #--------Removing used columns and reseting the index--------------------
-    strike = strike.drop(columns=['ball'])
+    strike = strike.drop(columns=['ball','runs_off_bat'])
     
     #--------Average strike rate of batsmen-----------------------------------
-    strike = strike.groupby(['striker','bowling_team'],as_index=False)[['strike_rate']].mean().round(decimals=2)
-    
+    #strike = strike.groupby(['striker','bowling_team'],as_index=False)[['strike_rate','runs_off_bat']].mean().round(decimals=2)
+    #strike.to_csv('testdata.csv')
     
     return(strike)
 
