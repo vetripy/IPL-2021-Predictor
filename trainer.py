@@ -6,7 +6,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import LabelEncoder
 from preprocess import data
 import joblib
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import datasets
 team_encoder = LabelEncoder()
 
 df = data()
@@ -33,9 +34,10 @@ x_train,x_test,y_train,y_test=train_test_split(X,y,random_state=1)
 # linreg.fit(x_train,y_train)
 
 data=[[batting_team_dict["Kolkata Knight Riders"],bowling_team_dict["Chennai Super Kings"],5]]
-dtree=DecisionTreeRegressor()
+dtree=LinearRegression()
 dtree.fit(x_train,y_train)
 y_pred = dtree.predict(data)
+
 print(y_pred)
 
 # joblib.dump(linreg,r'{0}/regeression_model.joblib'.format(sys.path[0]))
