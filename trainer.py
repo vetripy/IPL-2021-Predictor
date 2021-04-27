@@ -8,10 +8,12 @@ from preprocess import data,strike_rate,bowling_stats
 import joblib
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import datasets
+
 team_encoder = LabelEncoder()
 venue_encoder = LabelEncoder()
 name_encoder = LabelEncoder()
 bowler_encoder = LabelEncoder()
+
 df = data()
 df2 = strike_rate()
 df3 = bowling_stats()
@@ -45,12 +47,6 @@ X1_train,X1_test,Y1_train,Y1_test = train_test_split(X1,Y1,random_state=1)
 
 linreg = LinearRegression()
 linreg.fit(x_train,y_train)
-#data=[[batting_team_dict["Kolkata Knight Riders"],bowling_team_dict["Chennai Super Kings"],5]]
-#dtree=LinearRegression()
-#dtree.fit(x_train,y_train)
-#y_pred = dtree.predict(data)
-
-#rint(y_pred)
 
 linreg_2 = LinearRegression()
 linreg_2.fit(X_train,Y_train)
