@@ -52,30 +52,45 @@ def predictRuns(inputfile):
     temp2 = pd.read_csv(r"{0}/temp2.csv".format(sys.path[0]))
 
     temp['venue'] = venue_encoder.transform(temp['venue'])
-    temp['striker'] = name_encoder.transform(temp['striker'])
-    temp2['bowler'] = bowler_encoder.transform(temp2['bowler'])
-    
-    
 
     test_case['batting_team'] = team_encoder.transform(test_case['batting_team'])
     test_case['bowling_team'] = team_encoder.transform(test_case['bowling_team'])
 
-
-    for i in range(0,n+2):
-        data=[[temp['venue'].values[0],temp['striker'].values[i],test_case['bowling_team'].values[0]]]
-        strike_rate_list.append(round(new_regeression.predict(data)[0]))
-
-    ecoruns=0
-    for i in range(0,len(bowler_list)):
-        data=[[temp2['bowler'].values[i],test_case['batting_team'].values[0],test_case['innings'].values[0]]]
-        ecoruns+=(round(bowler_regeression.predict(data)[0])*over)
-
     data = [[test_case['batting_team'].values[0],test_case['bowling_team'].values[0],n]]
+
+    prediction = round(regeressor.predict(data)[0])
+
+    try:
+        temp['striker'] = name_encoder.transform(temp['striker'])
+        
+        for i in range(0,n+2):
+            data=[[temp['venue'].values[0],temp['striker'].values[i],test_case['bowling_team'].values[0]]]
+            strike_rate_list.append(round(new_regeression.predict(data)[0]))
+
+        avg_strike_rate = sum(strike_rate_list)/len(strike_rate_list)
+        runs = (avg_strike_rate/100)*36
     
-    prediction = round(regeressor.predict(data)[0])   
-    avg_strike_rate = sum(strike_rate_list)/len(strike_rate_list)
-    runs = (avg_strike_rate/100)*36
-    
-    prediction = (runs+prediction+ecoruns)/3
-    
-    return prediction
+    except Exception:
+        runs = 0
+
+    try:
+        temp2['bowler'] = bowler_encoder.transform(temp2['bowler'])
+
+        ecoruns=0
+        for i in range(0,len(bowler_list)):
+            data=[[temp2['bowler'].values[i],test_case['batting_team'].values[0],test_case['innings'].values[0]]]
+            ecoruns+=(round(bowler_regeression.predict(data)[0])*over)
+
+
+    except Exception:
+        ecoruns = 0
+
+    if runs!=0 and ecoruns!=0:
+        prediction = (prediction+runs+ecoruns)/3
+    elif runs!=0 and ecoruns==0:
+        prediction = (prediction+runs)/2
+    elif runs==0 and ecoruns!=0:
+        prediction = (prediction+ecoruns)/2
+    else:
+        pass
+    return(prediction)

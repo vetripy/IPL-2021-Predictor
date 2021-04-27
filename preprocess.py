@@ -100,7 +100,7 @@ def bowling_stats():
     economy['economy']=economy['economy'].round(decimals=0)
     economy['overs']=economy['overs'].round(decimals=0)
     economy = economy.drop(columns=['overs'])
-    #economy=economy.loc[economy['economy']!=float('inf')]
+    economy=economy.loc[economy['economy']!=float('inf')]
     
     return(economy)
 
