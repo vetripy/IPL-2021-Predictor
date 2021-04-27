@@ -40,4 +40,5 @@ for i in test_case['bowlers'].values[0].split(','):#full loop to the predictor
     data=[[bowler_dict[i],batting_team_dict[test_case['batting_team'].values[0]],test_case['innings'].values[0]]]
     y_pred+=(int(linreg.predict(data))*overs)
 
-print(y_pred)
+joblib.dump(linreg,r'{0}/regeression_bowling_model.joblib'.format(sys.path[0]))
+joblib.dump(team_encoder,r'{0}/name_encoder.joblib'.format(sys.path[0]))

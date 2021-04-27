@@ -26,3 +26,15 @@ def predictRuns(inputfile):
     
     return prediction
 
+test_case = pd.read_csv('input_test_data.csv')
+
+    n = len(test_case['batsmen'].values[0].split(','))-2
+    
+
+    file = open(r'{0}/regeression_bowling_model.joblib'.format(sys.path[0]),'rb')
+    regeressor = joblib.load(file)
+    file.close()
+    file = open(r'{0}/name_encoder.joblib'.format(sys.path[0]),'rb')
+    team_encoder = joblib.load(file)
+    file.close()    
+
