@@ -82,10 +82,6 @@ def bowling_stats():
     df=df.loc[df['innings']<=2]
     economy=pd.DataFrame()
     
-
-   
-
-
     #-----------No of overs----------------------------------------------------
     over=df.groupby(['match_id','bowler','batting_team','innings'],as_index=False)[['ball']].size()
     #over=over.groupby(['match_id','bowler','batting_team'],as_index=False)[['index']].sum()
@@ -104,7 +100,7 @@ def bowling_stats():
     economy['economy']=economy['economy'].round(decimals=0)
     economy['overs']=economy['overs'].round(decimals=0)
     economy = economy.drop(columns=['overs'])
-    economy=economy.loc[economy['economy']!=float('inf')]
+    #economy=economy.loc[economy['economy']!=float('inf')]
     
     return(economy)
 

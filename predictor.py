@@ -38,7 +38,6 @@ def predictRuns(inputfile):
     temp = pd.DataFrame({
         'venue' : [test_case['venue'].values[0] for i in range(len(batsmen_list))],
         'striker' : [i for i in batsmen_list],
-        'bowler' : [i for i in bowler_list],
         'bowling_team' : [test_case['bowling_team'] for i in range(len(batsmen_list))]})
 
     temp2 = pd.DataFrame({
@@ -55,6 +54,8 @@ def predictRuns(inputfile):
     temp['venue'] = venue_encoder.transform(temp['venue'])
     temp['striker'] = name_encoder.transform(temp['striker'])
     temp2['bowler'] = bowler_encoder.transform(temp2['bowler'])
+    
+    
 
     test_case['batting_team'] = team_encoder.transform(test_case['batting_team'])
     test_case['bowling_team'] = team_encoder.transform(test_case['bowling_team'])
