@@ -41,13 +41,20 @@ def predictRuns(inputfile):
         'bowler' : [i for i in bowler_list],
         'bowling_team' : [test_case['bowling_team'] for i in range(len(batsmen_list))]})
 
-    temp.to_csv(r"{0}/temp.csv".format(sys.path[0]))
+    temp2 = pd.DataFrame({
+        
+        'bowler' : [i for i in bowler_list],
+        'batting_team' : [test_case['batting_team'] for i in range(len(bowler_list))]})
 
+    temp.to_csv(r"{0}/temp.csv".format(sys.path[0]))
     temp = pd.read_csv(r"{0}/temp.csv".format(sys.path[0]))
+
+    temp2.to_csv(r"{0}/temp2.csv".format(sys.path[0]))
+    temp2 = pd.read_csv(r"{0}/temp2.csv".format(sys.path[0]))
 
     temp['venue'] = venue_encoder.transform(temp['venue'])
     temp['striker'] = name_encoder.transform(temp['striker'])
-    temp['bowler'] = bowler_encoder.transform(temp['bowler'])
+    temp2['bowler'] = bowler_encoder.transform(temp2['bowler'])
 
     test_case['batting_team'] = team_encoder.transform(test_case['batting_team'])
     test_case['bowling_team'] = team_encoder.transform(test_case['bowling_team'])
@@ -59,7 +66,7 @@ def predictRuns(inputfile):
 
     ecoruns=0
     for i in range(0,len(bowler_list)):
-        data=[[temp['bowler'].values[i],test_case['batting_team'].values[0],test_case['innings'].values[0]]]
+        data=[[temp2['bowler'].values[i],test_case['batting_team'].values[0],test_case['innings'].values[0]]]
         ecoruns+=(round(bowler_regeression.predict(data)[0])*over)
 
     data = [[test_case['batting_team'].values[0],test_case['bowling_team'].values[0],n]]
