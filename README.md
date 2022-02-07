@@ -10,6 +10,10 @@ Contains historic data of T20 matches that have occurred in the past. This datas
 
 **The input for the prediction is in the _input.csv_ file, it has the columns in the order of _(venue,innings,batting team,bowling team,batsmen,bowlers)_. Run the _main.py_ file with the the csv file (above mentioned) as it's _command line argument_.**
 
+```
+python manage.py input.csv
+```
+
 *The result will be printed.*
 
 
