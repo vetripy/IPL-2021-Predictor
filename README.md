@@ -1,12 +1,12 @@
 # IPL-2021-Predictor
 
-##Predicting IPL Scores 
+## Predicting IPL Scores 
 
 This program predicts the score (of first 6 overs) of a team with the previous data.
 
 Contains historic data of T20 matches that have occurred in the past. This dataset may be used by the candidate teams to train an ML model or come up with a data analytics based algorithm that can perform the required prediction as mentioned above.
 
-##Executing the program
+## Executing the program
 
 **The input for the prediction is in the _input.csv_ file, it has the columns in the order of _(venue,innings,batting team,bowling team,batsmen,bowlers)_. Run the _main.py_ file with the the csv file (above mentioned) as it's _command line argument_.**
 
