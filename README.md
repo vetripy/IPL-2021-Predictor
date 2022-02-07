@@ -8,7 +8,7 @@ Contains historic data of T20 matches that have occurred in the past. This datas
 
 Executing the program 
 
-The input for the prediction is in the input_test_data.csv file, it has the columns in the order of (venue,innings,batting team,bowling team,batsmen,bowlers)
+The input for the prediction is in the input.csv file, it has the columns in the order of (venue,innings,batting team,bowling team,batsmen,bowlers)
 Run the main.py file with the the csv file (above mentioned) as it's command line argument. The result will be printed.
 
 I did not create a front-end for this since at the time of creating this project it was unneccessary. I may develop in the future with some accuracy to the predictions since 2021 IPL was not conducted in India and the data that we trained the ML model had all the matches happening in India.
