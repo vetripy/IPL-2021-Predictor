@@ -1,6 +1,6 @@
 # IPL-2021-Predictor
 
-## Predicting IPL Scores 
+## About this Predictor 
 
 This program predicts the score (of first 6 overs) of a team with the previous data.
 
