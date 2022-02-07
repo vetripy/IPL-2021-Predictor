@@ -2,6 +2,9 @@ import pandas as pd
 import joblib
 import sys
 
+import warnings
+warnings.filterwarnings('ignore') 
+
 def predictRuns(inputfile):
     
     test_case = pd.read_csv(inputfile)
@@ -12,25 +15,25 @@ def predictRuns(inputfile):
     n = len(batsmen_list)-2
 
     
-    file = open(r'{0}/regeression_model.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/regeression_model.joblib'.format(sys.path[0]),'rb')
     regeressor = joblib.load(file)
     file.close()
-    file = open(r'{0}/new_regeression_model.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/new_regeression_model.joblib'.format(sys.path[0]),'rb')
     new_regeression = joblib.load(file)
     file.close()
-    file = open(r'{0}/bowler_regeression_model.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/bowler_regeression_model.joblib'.format(sys.path[0]),'rb')
     bowler_regeression = joblib.load(file)
     file.close()
-    file = open(r'{0}/team_encoder.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/team_encoder.joblib'.format(sys.path[0]),'rb')
     team_encoder = joblib.load(file)
     file.close()    
-    file = open(r'{0}/venue_encoder.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/venue_encoder.joblib'.format(sys.path[0]),'rb')
     venue_encoder = joblib.load(file)
     file.close()
-    file = open(r'{0}/name_encoder.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/name_encoder.joblib'.format(sys.path[0]),'rb')
     name_encoder = joblib.load(file)
     file.close()
-    file = open(r'{0}/bowler_encoder.joblib'.format(sys.path[0]),'rb')
+    file = open(r'{0}/joblibs/bowler_encoder.joblib'.format(sys.path[0]),'rb')
     bowler_encoder = joblib.load(file)
     file.close()
     
@@ -45,11 +48,7 @@ def predictRuns(inputfile):
         'bowler' : [i for i in bowler_list],
         'batting_team' : [test_case['batting_team'] for i in range(len(bowler_list))]})
 
-    temp.to_csv(r"{0}/temp.csv".format(sys.path[0]))
-    temp = pd.read_csv(r"{0}/temp.csv".format(sys.path[0]))
 
-    temp2.to_csv(r"{0}/temp2.csv".format(sys.path[0]))
-    temp2 = pd.read_csv(r"{0}/temp2.csv".format(sys.path[0]))
 
     temp['venue'] = venue_encoder.transform(temp['venue'])
 
